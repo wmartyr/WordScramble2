@@ -63,6 +63,16 @@ struct ContentView: View {
             return
         }
         
+        guard isDifferentfromRoot(word: answer) else {
+            wordError(title: "Word is the same as root", message: "You can't use the root word")
+            return
+        }
+        
+        guard isLongerThan2(word: answer) else {
+            wordError(title: "Word too short", message: "Word should be at least 3 characters long")
+            return
+        }
+        
         withAnimation {
             usedWords.insert(answer, at: 0)
         }
@@ -108,6 +118,14 @@ struct ContentView: View {
         errorTitle = title
         errorMessage = message
         showingError = true
+    }
+    
+    func isDifferentfromRoot(word: String) -> Bool {
+        !(word == rootWord)
+    }
+    
+    func isLongerThan2(word: String) -> Bool {
+        word.count > 2
     }
 }
 
