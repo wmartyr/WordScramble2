@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var showingError = false
+    @State private var allWords: [String] = []
     
     var body: some View {
         NavigationStack {
@@ -39,6 +40,12 @@ struct ContentView: View {
                 Button("OK") {}
             } message: {
                 Text(errorMessage)
+            }
+            .toolbar {
+                Button("New Word") {
+                    newRootWord()
+                    resetUsedWords()
+                }
             }
         }
     }
@@ -82,8 +89,8 @@ struct ContentView: View {
     func startGame() {
         if let startWordsUrl = Bundle.main.url(forResource: "start", withExtension: "txt") {
             if let startWords = try? String(contentsOf: startWordsUrl, encoding: String.Encoding.utf8) {
-                let allWords = startWords.components(separatedBy: "\n")
-                rootWord = allWords.randomElement() ?? "silkworm"
+                allWords = startWords.components(separatedBy: "\n")
+                newRootWord()
                 return
             }
         }
@@ -126,6 +133,14 @@ struct ContentView: View {
     
     func isLongerThan2(word: String) -> Bool {
         word.count > 2
+    }
+    
+    func newRootWord() {
+        rootWord = allWords.randomElement() ?? "silkworm"
+    }
+    
+    func resetUsedWords() {
+        usedWords = []
     }
 }
 
