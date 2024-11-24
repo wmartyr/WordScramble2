@@ -16,6 +16,9 @@ struct ContentView: View {
     @State private var errorMessage = ""
     @State private var showingError = false
     @State private var allWords: [String] = []
+    @State private var totalWords = 0
+    @State private var totalLetters = 0
+    @State private var lettersPerWord = "0.00"
     
     var body: some View {
         NavigationStack {
@@ -23,6 +26,13 @@ struct ContentView: View {
                 Section {
                     TextField("Enter your word", text: $newWord)
                         .textInputAutocapitalization(.never)
+                }
+                Section("Score") {
+                    HStack {
+                        Text("Words: \(totalWords)")
+                        Text("Letters: \(totalLetters)")
+                        Text("LPW: \(lettersPerWord)")
+                    }
                 }
                 Section {
                     ForEach(usedWords, id: \.self) { word in
@@ -83,6 +93,7 @@ struct ContentView: View {
         withAnimation {
             usedWords.insert(answer, at: 0)
         }
+        updateScores(word: answer)
         newWord = ""
     }
     
@@ -141,6 +152,18 @@ struct ContentView: View {
     
     func resetUsedWords() {
         usedWords = []
+    }
+    
+    func updateScores(word: String) {
+        totalWords += 1
+        totalLetters += word.count
+        lettersPerWord = String(format: "%.2f", Double(totalLetters) / Double(totalWords))
+    }
+    
+    func resetScores() {
+        totalWords = 0
+        totalLetters = 0
+        lettersPerWord = "0.00"
     }
 }
 
